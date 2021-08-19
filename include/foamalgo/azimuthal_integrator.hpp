@@ -14,8 +14,8 @@
 #include <cmath>
 
 #if defined(FOAM_USE_TBB)
+#include <mutex> // There is a bug in "tbb/mutex.h".
 #include "tbb/parallel_for.h"
-#include "tbb/mutex.h"
 #endif
 
 #include <xtensor/xmath.hpp>
@@ -433,7 +433,7 @@ std::array<T, 2> ConcentricRingsFinder<T>::search(E&& src, T cx0, T cy0, size_t 
 
   int initial_space = 10;
 #if defined(FOAM_USE_TBB)
-  tbb::mutex mtx;
+  std::mutex mtx;
   tbb::parallel_for(tbb::blocked_range<int>(-initial_space, initial_space),
     [&src, cx0, cy0, npt, min_count, &cx_max, &cy_max, &max_s, initial_space, &mtx, this]
     (const tbb::blocked_range<int> &block)
@@ -458,7 +458,7 @@ std::array<T, 2> ConcentricRingsFinder<T>::search(E&& src, T cx0, T cy0, size_t 
 
 #if defined(FOAM_USE_TBB)
           {
-            tbb::mutex::scoped_lock lock(mtx);
+            std::scoped_lock lock(mtx);
 #endif
             if (curr_max > max_s)
             {
