@@ -4,7 +4,7 @@ channels:
 dependencies:
 # Remember to update CMakeLists.txt when C++ dependencies' versions change.
   - cmake
-  - tbb-devel=2020.3
+  - tbb-devel=2021.3
   - xsimd=7.6.0
   - xtensor-blas=0.19.1
   - numpy>=1.19.1
